@@ -144,11 +144,12 @@ class TemporaryDirectory
         $osReleaseNumber = (float) shell_exec('lsb_release -rs');
         if ($osDistributor === $FAILING_OS_DISTRIBUTOR && $osReleaseNumber >= $failingOsReleaseNumberInFloat) {
             $CUSTOM_TEMP_DIR_NAME = 'puppeteer-tmp';
-            $HOME_DIR = !empty($_SERVER['HOME']) ? $_SERVER['HOME'] : posix_getpwuid(getmyuid())['dir'];
+            $HOME_DIR = ! empty($_SERVER['HOME']) ? $_SERVER['HOME'] : posix_getpwuid(getmyuid())['dir'];
             $CUSTOM_TEMP_DIR_FULL_PATH = $HOME_DIR.DIRECTORY_SEPARATOR.$CUSTOM_TEMP_DIR_NAME;
-            if (!file_exists($CUSTOM_TEMP_DIR_FULL_PATH)) {
+            if (! file_exists($CUSTOM_TEMP_DIR_FULL_PATH)) {
                 mkdir($CUSTOM_TEMP_DIR_FULL_PATH, 0777, true);
             }
+
             return $CUSTOM_TEMP_DIR_FULL_PATH;
         }
         /*HOTFIX: END*/
