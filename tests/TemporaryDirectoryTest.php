@@ -35,6 +35,14 @@ class TemporaryDirectoryTest extends TestCase
     }
 
     /** @test */
+    public function it_can_create_a_temporary_directory_with_shorthand_make()
+    {
+        $temporaryDirectory = TemporaryDirectory::make();
+
+        $this->assertDirectoryExists($temporaryDirectory->path());
+    }
+
+    /** @test */
     public function it_can_create_a_temporary_directory_with_a_name()
     {
         $temporaryDirectory = (new TemporaryDirectory())
@@ -270,6 +278,35 @@ class TemporaryDirectoryTest extends TestCase
             ->delete();
 
         $this->assertTrue($temporaryDirectory);
+    }
+
+    /** @test */
+    public function it_exists_function_should_tell_if_directory_exists()
+    {
+        $temporaryDirectory = (new TemporaryDirectory())
+            ->name($this->temporaryDirectory);
+
+        $this->assertFalse($temporaryDirectory->exists());
+
+        $temporaryDirectory->create();
+
+        $this->assertTrue($temporaryDirectory->exists());
+    }
+
+    /** @test */
+    public function it_can_delete_when_object_is_destroyed()
+    {
+        $temporaryDirectory = (new TemporaryDirectory())
+            ->name($this->temporaryDirectory)
+            ->deleteWhenDestroyed()
+            ->create();
+
+        $fullPath = $temporaryDirectory->path();
+
+        $this->assertDirectoryExists($fullPath);
+
+        unset($temporaryDirectory);
+        $this->assertDirectoryDoesNotExist($fullPath);
     }
 
     protected function deleteDirectory(string $path): bool
